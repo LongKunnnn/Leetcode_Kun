@@ -1,0 +1,30 @@
+class Solution:
+    def spellchecker(self, wordlist: List[str], queries: List[str]) -> List[str]:
+        vowels = set("ueoai")
+        def devowel(x: str) -> str:
+            return ''.join("*" if char in vowels else char for char in x)
+
+        exact_words = set(wordlist)
+        case_insensitive = {}
+        vowel_mask = {}
+
+        for word in wordlist:
+            lower = word.lower()
+            mask = devowel(lower)
+
+            if lower not in case_insensitive:
+                case_insensitive[lower] = word
+            if mask not in vowel_mask:
+                vowel_mask[mask] = word
+        
+        result = []
+        for q in queries:
+            if q in exact_words:
+                result.append(q)
+            elif q.lower() in case_insensitive:
+                result.append(case_insensitive[q.lower()])
+            elif devowel(q.lower()) in vowel_mask:
+                result.append(vowel_mask[devowel(q.lower())])
+            else:
+                result.append("")
+        return result
